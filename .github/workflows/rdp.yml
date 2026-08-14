@@ -1,0 +1,22 @@
+name: Windows Web Desktop
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Web Windows Başlat
+      run: |
+        docker run -d \
+          --name windows \
+          -p 8080:8080 \
+          --pids-limit 0 \
+          dockurr/windows
+
+    - name: Tunnel (Cloudflare)
+      run: |
+        wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+        chmod +x cloudflared-linux-amd64
+        ./cloudflared-linux-amd64 tunnel --url http://localhost:8080
+
